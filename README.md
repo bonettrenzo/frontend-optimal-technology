@@ -32,7 +32,7 @@ en caso que el usuario desee cambiar el puerto de la aplicación debe.
 
 5) acceder al directorio raíz de la aplicación y en el archivo .env debe buscar la variable que tiene por nombre NODE_PORT_APLICATION, y reemplarla el valor por el que desee.
 
-### Testing
+# Testing
 Para realizar pruebas de los endpoints, hemos utilizado Jest junto con Supertest para simular las solicitudes HTTP. Puedes ejecutar las pruebas utilizando el siguiente comando:
 
 <ul>
