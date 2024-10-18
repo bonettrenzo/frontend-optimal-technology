@@ -32,6 +32,16 @@ en caso que el usuario desee cambiar el puerto de la aplicación debe.
 
 5) acceder al directorio raíz de la aplicación y en el archivo .env debe buscar la variable que tiene por nombre NODE_PORT_APLICATION, y reemplarla el valor por el que desee.
 
+### Testing
+Para realizar pruebas de los endpoints, hemos utilizado Jest junto con Supertest para simular las solicitudes HTTP. Puedes ejecutar las pruebas utilizando el siguiente comando:
+
+<ul>
+  <li>
+    <strong>npm test</strong>
+  </li>
+</ul>
+
+Las pruebas están diseñadas para garantizar que los endpoints funcionen correctamente y manejen tanto los casos de éxito como los errores adecuadamente.
 
 # Instrucciones para configurar la base de datos
 por defecto la aplicación ya viene con el archivo .env para que el usuario, pueda configurar la api con su propia base de datos en caso que no requiera utilizar la que 
