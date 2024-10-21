@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import TitleHeader from "./components/TitleHeader";
 import * as userService from "./service/user.service";
 import { ToastContainer, toast } from "react-toastify";
 import { useModal } from "./hook/useModal";
-import Swal from "sweetalert2";
 
 import ModalAccionesUsuarios from "./components/ModalAccionesUsuarios";
+import useUser from "./hook/useUser";
+import Loading from "./components/Loading";
+import NoData from "./components/NoData";
 
 function App() {
-  const [usersData, setUsersData] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [form, setForm] = useState({
     nombre: "",
     id: null,
   });
+
   const modalUsuario = useModal();
+
+  const {getUser, handleDelete, usersData, isLoading} = useUser()
 
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -58,44 +62,6 @@ function App() {
     }
   };
 
-  const getUser = () => {
-    userService.getAll().then((res) => {
-      if (res.success) {
-        setUsersData(res.data);
-      } else {
-        setUsersData([]);
-        toast.error(
-          res.message || "no se pudo recuperar la información de usuarios"
-        );
-      }
-    });
-  };
-
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Esta acción no se puede deshacer",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, eliminar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        userService.remove(id).then((res) => {
-          if (res.success) {
-            toast.success(res.message || "se eliminó el usuario correctamente");
-            getUser();
-          }
-        });
-      }
-    });
-  };
-
-  useEffect(() => {
-    getUser();
-  }, []);
-
   return (
     <main style={{ width: "700px", marginTop: "2rem", marginInline: "auto" }}>
       <TitleHeader>Crud de usuario</TitleHeader>
@@ -111,27 +77,31 @@ function App() {
         <button onClick={() => handleCreate()}>Crear usuario</button>
       </div>
       <div class="overflow-auto">
-        <table class="striped">
-          <thead data-theme="dark">
-            <tr>
-              <th>Nombre</th>
-              <th style={{ textAlign: "end" }}>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usersData.map((user) => (
-              <tr key={user.id}>
-                <td>{user.nombre}</td>
-                <td style={{ display: "flex", gap: 4, justifyContent: "end" }}>
-                  <button onClick={() => handleUpdate(user)}>Editar</button>
-                  <button onClick={() => handleDelete(user.id)}>
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {!usersData || usersData.length === 0 ?       <NoData
+        message="No se encontraron resultados. Haz clic en reintentar para intentarlo nuevamente." 
+        onRefetch={getUser} 
+      /> : isLoading ? <Loading /> : <table class="striped">
+      <thead data-theme="dark">
+        <tr>
+          <th>Nombre</th>
+          <th style={{ textAlign: "end" }}>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {usersData.map((user) => (
+          <tr key={user.id}>
+            <td>{user.nombre}</td>
+            <td style={{ display: "flex", gap: 4, justifyContent: "end" }}>
+              <button onClick={() => handleUpdate(user)}>Editar</button>
+              <button onClick={() => handleDelete(user.id)}>
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table> }
+
       </div>
       <ToastContainer />
 
