@@ -77,7 +77,7 @@ function App() {
         <button onClick={() => handleCreate()}>Crear usuario</button>
       </div>
       <div class="overflow-auto">
-        {!usersData || usersData.length === 0 ?       <NoData
+        {(!usersData || usersData.length === 0) && !isLoading ? <NoData
         message="No se encontraron resultados. Haz clic en reintentar para intentarlo nuevamente." 
         onRefetch={getUser} 
       /> : isLoading ? <Loading /> : <table class="striped">
